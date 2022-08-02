@@ -1,2 +1,4 @@
 export { default as AccordionItem } from "./components/AccordionItem"
-export * from "./components/Accordion";
+import Accordion from "./components/Accordion";
+
+export default Accordion;

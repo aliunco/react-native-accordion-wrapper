@@ -1,6 +1,6 @@
 {
   "name": "react-native-accordion-wrapper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A handy wrapper of accordion behavior for react native components",
   "author": "Ali Saeedifar <aliunco90@gmail.com>",
   "main": "lib/index.js",
