@@ -3,6 +3,7 @@
 
  An 🪗 accordion component for react native written in [TypeScript](https://www.typescriptlang.org/) in order to handle the accordion behavior for any react native components.
 
+![](https://github.com/aliunco/react-native-accordion-wrapper/blob/main/Demo.gif?raw=true)
 
 ## Installing
 
@@ -28,11 +29,6 @@ const Example = () => {
 
     return (
       <Accordion
-        shouldSelectOneItemAtATime
-        headerItemsStyle={{
-          backgroundColor: '#dedede',
-          borderBottomColor: '#000000',
-        }}
         dataSource={[{
             title: 'first title',
             child: <View><Text>This is the child view</Text></View>
@@ -72,10 +68,11 @@ here is the properties and the descriptions of it:
 
 | Props Name | Type | Default | Description |
 | :--: | :----- | :--: | :------------------------- |
-| dataSource | `DataSourceItem[]` | **required input** | The datasource is an array of objects containing `title` (which can also be called header) and `child`; `title` is `string` and `child` is any `JSX.Element` |
+| dataSource | <sub> { <br/>&ensp; title: string, <br/>&ensp; child: JSX.Element, <br/>&ensp; onPress?: () => void, <br/>&ensp; nonExpandable?: boolean <br/> }[] </sub> | **required input** | The datasource is an array of objects containing `title` (which can also be called header) and `child` (will be presented after tapping each header) and `onPress`: an optional callback for tapping each header and `nonExpandable` an optional boolean to mention if an accordion item is expandable or not. (by default it's false) |
+| initialActiveIndex | `number` | `undefined` | initial accordion item index for being expanded |
 | useFlatList | `boolean` | false | if the component is not inside another scrollview, you can use this feature to enhance the performance by sending `true` |
 | headerItemsStyle | `ViewStyle` | `undefined` | You can change the header items style (e.g. change backgroundColor of it) |
-| rightChevronIcon | JSX.Element | undefined | if you pass a chevron element, it would point at bottom when it's collapsed and point to top when it's opened. (please notice that you should provide a chevron which points to the right) |
+| rightChevronIcon | JSX.Element | undefined | You can pass any JSX element as chevron (at the right position of the header items), it would be rotated 180 degrees (by animation) when the accordion item gets opened. |
 | headerTitleLabelStyle | `TextStyle` | undefined | you can change the text style of the header items | 
 | shouldSelectOneItemAtATime | `boolean` | true | if only one item must be opened at a time, set it as `true`, and if all of the accordion items can be opened independentely, set it as `true` |
 | listHeaderComponent | React.ReactElement | `undefined` | it would be useful whenever you set the `useFlatList` to be `true`, so it's just like the `ListHeaderComponent` of `FlatList`|
@@ -88,6 +85,7 @@ here is the properties and the descriptions of it:
 | titleStyle | `TextStyle` | `undefined` | optional text style for the title header |
 | headerStyle | `ViewStyle` | `undefined` | optional header view style |
 | shouldCollapse | `boolean` | `undefined` |  whenever you change it from `false` to `true`, it would be collapsed by force |
-| rightChevronIcon | JSX.Element | `undefined` | if you pass a chevron element, it would point at bottom when it's collapsed and point to top when it's opened. (please notice that you should provide a chevron which points to the right) |
-| onExpandStateChange | `(isExpanded: boolean) => void` | `undefined` | a callback closure in order to inform outside of the component about collapse state of it.
-| children | React.ReactNode | **required input**  | the child component which would be collapsed or expanded by tapping the header title |
+| rightChevronIcon | JSX.Element | `undefined` | You can pass any JSX element as chevron (at the right position of the header items), it would be rotated 180 degrees (by animation) when the accordion item gets opened. |
+| onExpandStateChange | `(isExpanded: boolean) => void` | `undefined` | a callback closure in order to inform outside of the component about collapse state of it. |
+| onPress | `() => void` | `undefined` | a callback closure which will be called whenever the accordion item gets tapped (can be usefull for tracking) |
+| children | React.ReactNode | `undefined` | the child component which would be collapsed or expanded by tapping the header title |

@@ -2,13 +2,19 @@ import React from 'react';
 import { FlatList, TextStyle, ViewStyle } from 'react-native';
 import AccordionItem from './AccordionItem';
 
-type DataSourceItem = { title: string; child: React.ReactNode };
+type DataSourceItem = { 
+    title: string; 
+    child?: React.ReactNode; 
+    nonExpandable?: boolean; 
+    onPress?: () => void 
+}
 
 export type AccordionProps = {
     useFlatList?: boolean; // use flatlist
     dataSource: DataSourceItem[];
     headerItemsStyle?: ViewStyle;
     rightChevronIcon?: JSX.Element;
+    initialActiveIndex?: number;
     headerTitleLabelStyle?: TextStyle;
     shouldSelectOneItemAtATime?: boolean;
     listHeaderComponent?: React.ReactElement;
@@ -19,35 +25,43 @@ const Accordion = ({
     useFlatList = false,
     rightChevronIcon,
     headerItemsStyle,
+    initialActiveIndex,
     listHeaderComponent,
     headerTitleLabelStyle,
     shouldSelectOneItemAtATime = true,
 }: AccordionProps) => {
-    const [activeIndex, setActiveIndex] = React.useState<number>();
-
-    const renderAccordionItem = ({
+    const [activeIndex, setActiveIndex] = React.useState<number | undefined>(
+        initialActiveIndex,
+      );
+    
+      const renderAccordionItem = ({
         item,
         index,
-    }: {
+      }: {
         item: DataSourceItem;
         index: number;
-    }) => {
+      }) => {
         return (
-            <AccordionItem
-                title={item.title}
-                titleStyle={headerTitleLabelStyle}
-                rightChevronIcon={rightChevronIcon}
-                key={`${item.title}-${index}`}
-                headerStyle={headerItemsStyle}
-                onExpandStateChange={(isExpanded) => {
-                    isExpanded && setActiveIndex(index);
-                }}
-                shouldCollapse={shouldSelectOneItemAtATime ? index !== activeIndex : false}
-            >
-                {item.child}
-            </AccordionItem>
+          <AccordionItem
+            title={item.title}
+            isExpandable={!item.nonExpandable}
+            titleStyle={headerTitleLabelStyle}
+            rightChevronIcon={rightChevronIcon}
+            initialExpandedState={initialActiveIndex === index}
+            key={`${item.title}-${index}`}
+            headerStyle={headerItemsStyle}
+            onPress={item.onPress}
+            onExpandStateChange={(isExpanded) => {
+              if (isExpanded) {
+                setActiveIndex(index);
+              }
+            }}
+            shouldCollapse={shouldSelectOneItemAtATime ? index !== activeIndex : false}
+          >
+            {item.child}
+          </AccordionItem>
         );
-    };
+      };
 
     return useFlatList ? (
         <FlatList

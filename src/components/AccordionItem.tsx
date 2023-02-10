@@ -11,84 +11,94 @@ import {
     ViewStyle,
 } from 'react-native';
 
-type AccordionItemProps = {
+type Configs = {
     title: string;
+    isExpandable: boolean;
     titleStyle?: TextStyle;
     headerStyle?: ViewStyle;
     shouldCollapse?: boolean;
+    children?: React.ReactNode;
     rightChevronIcon?: JSX.Element
+    initialExpandedState?: boolean;
+    onPress?: () => void;
     onExpandStateChange?: (isExpanded: boolean) => void;
-    children: React.ReactNode;
+}
+
+type AccordionItemProps = Configs & {
+    customHeaderItem?: (configs: Configs & { isExpanded: boolean }) => JSX.Element;
 };
 
 const AccordionItem = ({
-    title,
-    children,
-    titleStyle,
-    headerStyle,
-    shouldCollapse,
-    rightChevronIcon,
-    onExpandStateChange,
+    customHeaderItem,
+    ...configs
 }: AccordionItemProps) => {
-    const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
-
+    const [isExpanded, setIsExpanded] = React.useState<boolean>(
+        configs.initialExpandedState || false,
+    );
+        
     React.useEffect(() => {
         if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-            UIManager.setLayoutAnimationEnabledExperimental(true)
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         }
     }, []);
-
+    
     React.useEffect(() => {
-        if (shouldCollapse === true) {
-            LayoutAnimation.configureNext({
-                duration: 200,
-                update: {
-                    type: 'easeIn',
-                },
-            });
-            setIsExpanded(false);
+        if (configs.shouldCollapse === true) {
+            toggleExpandedState(false);
         }
-    }, [shouldCollapse]);
-
+    }, [configs.shouldCollapse]);
+    
     React.useEffect(() => {
-        onExpandStateChange?.(isExpanded);
+        configs.onExpandStateChange?.(isExpanded);
     }, [isExpanded]);
-
+    
     const changeExpandedState = () => {
+        configs.onPress?.();
+        toggleExpandedState();
+    };
+
+    const toggleExpandedState = (forcedValue?: boolean) => {
+        if (configs.isExpandable === false) return;
         LayoutAnimation.configureNext({
             duration: 200,
             update: {
                 type: 'easeIn',
             },
         });
-        setIsExpanded((p) => !p);
-    };
-
+        setIsExpanded((p) => forcedValue ?? !p);
+    }
+    
     return (
         <View style={styles.itemContainer}>
-            <TouchableOpacity onPress={changeExpandedState}>
-                <View style={[styles.itemHeader, headerStyle]}>
-                    <Text style={titleStyle}>{title}</Text>
-                    {
-                        rightChevronIcon !== undefined &&
-                        <View style={[styles.chevronIcon, { transform: [{ rotate: `${isExpanded ? '-90' : '90'}deg` }] }]}>
-                            {rightChevronIcon}
-                        </View>
-                    }
-                </View>
-            </TouchableOpacity>
-            {isExpanded && children}
+            {
+                customHeaderItem !== undefined ? customHeaderItem({ ...configs, isExpanded, onPress: changeExpandedState }) :
+                <TouchableOpacity onPress={changeExpandedState}>
+                    <View style={[styles.itemHeader, configs.headerStyle]}>
+                        <Text style={configs.titleStyle}>{configs.title}</Text>
+                        {
+                            configs.rightChevronIcon !== undefined &&
+                            <View style={{
+                                    ...styles.chevronIcon,
+                                    transform: [{rotate: `${isExpanded ? '0' : '180'}deg`}],
+                                }}>
+                                {configs.rightChevronIcon}
+                            </View>
+                        }
+                    </View>
+                </TouchableOpacity>
+            }
+            {isExpanded && configs.children}
         </View>
-    );
+        );
 };
-
+    
 const styles = StyleSheet.create({
     itemSeperator: {
         width: '100%',
     },
     chevronIcon: {
-        width: 25,
-        height: 25
+        justifyContent: "center",
+        alignContent: "center",
     },
     itemHeader: {
         width: '100%',
@@ -107,3 +117,4 @@ const styles = StyleSheet.create({
 });
 
 export default AccordionItem;
+        
