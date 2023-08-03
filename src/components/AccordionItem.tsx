@@ -16,7 +16,6 @@ type Configs = {
     isExpandable: boolean;
     titleStyle?: TextStyle;
     headerStyle?: ViewStyle;
-    shouldCollapse?: boolean;
     children?: React.ReactNode;
     rightChevronIcon?: JSX.Element
     initialExpandedState?: boolean;
@@ -33,7 +32,7 @@ const AccordionItem = ({
     ...configs
 }: AccordionItemProps) => {
     const [isExpanded, setIsExpanded] = React.useState<boolean>(
-        configs.initialExpandedState || false,
+        configs.initialExpandedState ?? false,
     );
         
     React.useEffect(() => {
@@ -43,10 +42,10 @@ const AccordionItem = ({
     }, []);
     
     React.useEffect(() => {
-        if (configs.shouldCollapse === true) {
-            toggleExpandedState(false);
+        if (isExpanded !== configs.initialExpandedState) {
+            toggleExpandedState(configs.initialExpandedState);
         }
-    }, [configs.shouldCollapse]);
+    }, [configs.initialExpandedState]);
     
     React.useEffect(() => {
         configs.onExpandStateChange?.(isExpanded);

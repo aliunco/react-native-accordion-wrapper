@@ -30,9 +30,15 @@ const Accordion = ({
     headerTitleLabelStyle,
     shouldSelectOneItemAtATime = true,
 }: AccordionProps) => {
-    const [activeIndex, setActiveIndex] = React.useState<number | undefined>(
+      const [activeIndex, setActiveIndex] = React.useState<number | undefined>(
         initialActiveIndex,
       );
+
+      React.useEffect(() => {
+        if (activeIndex !== initialActiveIndex) {
+          setActiveIndex(initialActiveIndex)
+        }
+      }, [initialActiveIndex])
     
       const renderAccordionItem = ({
         item,
@@ -41,13 +47,18 @@ const Accordion = ({
         item: DataSourceItem;
         index: number;
       }) => {
+        let initialForceExpandedState = initialActiveIndex === index
+        if (shouldSelectOneItemAtATime) {
+          initialForceExpandedState = index === activeIndex;
+        }
+
         return (
           <AccordionItem
             title={item.title}
             isExpandable={!item.nonExpandable}
             titleStyle={headerTitleLabelStyle}
             rightChevronIcon={rightChevronIcon}
-            initialExpandedState={initialActiveIndex === index}
+            initialExpandedState={initialForceExpandedState}
             key={`${item.title}-${index}`}
             headerStyle={headerItemsStyle}
             onPress={item.onPress}
@@ -56,7 +67,6 @@ const Accordion = ({
                 setActiveIndex(index);
               }
             }}
-            shouldCollapse={shouldSelectOneItemAtATime ? index !== activeIndex : false}
           >
             {item.child}
           </AccordionItem>
