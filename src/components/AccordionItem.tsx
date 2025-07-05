@@ -88,9 +88,13 @@ const AccordionItem = ({
                     </View>
                 </TouchableOpacity>
             }
-            <View style={configs.childrenWrapperStyle}>
-                {isExpanded && configs.children}
-            </View>
+            {
+                isExpanded && (
+                    <View style={configs.childrenWrapperStyle}>
+                        {configs.children}
+                    </View>
+                )
+            }
         </View>
         );
 };
