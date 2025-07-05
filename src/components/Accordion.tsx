@@ -13,6 +13,7 @@ export type AccordionProps = {
     useFlatList?: boolean; // use flatlist
     dataSource: DataSourceItem[];
     headerItemsStyle?: ViewStyle;
+    itemWrapperStyle?: ViewStyle;
     rightChevronIcon?: JSX.Element;
     initialActiveIndex?: number;
     headerTitleLabelStyle?: TextStyle;
@@ -24,6 +25,7 @@ const Accordion = ({
     dataSource,
     useFlatList = false,
     rightChevronIcon,
+    itemWrapperStyle,
     headerItemsStyle,
     initialActiveIndex,
     listHeaderComponent,
@@ -55,6 +57,7 @@ const Accordion = ({
         return (
           <AccordionItem
             title={item.title}
+            itemWrapperStyle={itemWrapperStyle}
             isExpandable={!item.nonExpandable}
             titleStyle={headerTitleLabelStyle}
             rightChevronIcon={rightChevronIcon}

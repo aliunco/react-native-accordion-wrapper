@@ -15,6 +15,7 @@ type Configs = {
     title: string;
     isExpandable: boolean;
     titleStyle?: TextStyle;
+    itemWrapperStyle?: ViewStyle;
     headerStyle?: ViewStyle;
     children?: React.ReactNode;
     rightChevronIcon?: JSX.Element
@@ -68,7 +69,7 @@ const AccordionItem = ({
     }
     
     return (
-        <View style={styles.itemContainer}>
+        <View style={[styles.itemContainer, configs.itemWrapperStyle]}>
             {
                 customHeaderItem !== undefined ? customHeaderItem({ ...configs, isExpanded, onPress: changeExpandedState }) :
                 <TouchableOpacity onPress={changeExpandedState}>
