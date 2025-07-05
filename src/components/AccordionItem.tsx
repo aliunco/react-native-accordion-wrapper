@@ -18,6 +18,7 @@ type Configs = {
     itemWrapperStyle?: ViewStyle;
     headerStyle?: ViewStyle;
     children?: React.ReactNode;
+    childrenWrapperStyle?: ViewStyle;
     rightChevronIcon?: JSX.Element
     initialExpandedState?: boolean;
     onPress?: () => void;
@@ -87,7 +88,9 @@ const AccordionItem = ({
                     </View>
                 </TouchableOpacity>
             }
-            {isExpanded && configs.children}
+            <View style={configs.childrenWrapperStyle}>
+                {isExpanded && configs.children}
+            </View>
         </View>
         );
 };

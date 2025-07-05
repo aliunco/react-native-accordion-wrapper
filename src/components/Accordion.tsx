@@ -14,6 +14,7 @@ export type AccordionProps = {
     dataSource: DataSourceItem[];
     headerItemsStyle?: ViewStyle;
     itemWrapperStyle?: ViewStyle;
+    childrenWrapperStyle?: ViewStyle;
     rightChevronIcon?: JSX.Element;
     initialActiveIndex?: number;
     headerTitleLabelStyle?: TextStyle;
@@ -28,6 +29,7 @@ const Accordion = ({
     itemWrapperStyle,
     headerItemsStyle,
     initialActiveIndex,
+    childrenWrapperStyle,
     listHeaderComponent,
     headerTitleLabelStyle,
     shouldSelectOneItemAtATime = true,
@@ -59,6 +61,7 @@ const Accordion = ({
             title={item.title}
             itemWrapperStyle={itemWrapperStyle}
             isExpandable={!item.nonExpandable}
+            childrenWrapperStyle={childrenWrapperStyle}
             titleStyle={headerTitleLabelStyle}
             rightChevronIcon={rightChevronIcon}
             initialExpandedState={initialForceExpandedState}
